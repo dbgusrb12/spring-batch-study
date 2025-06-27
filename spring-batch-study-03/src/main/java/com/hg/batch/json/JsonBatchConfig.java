@@ -12,12 +12,15 @@ import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
 @Slf4j
 @Configuration
+@ConditionalOnProperty(prefix = "spring.batch.job", name = "name", havingValue = "jsonJob")
+// batch name 이 jsonJob 일 때만 설정
 public class JsonBatchConfig {
 
     @Bean
@@ -43,7 +46,7 @@ public class JsonBatchConfig {
     @Bean
     @StepScope
     public Tasklet jsonTasklet(
-          @Value("#{jobParameters['name']}") String name
+            @Value("#{jobParameters['name']}") String name
     ) {
         return (contribution, chunkContext) -> {
             log.info("jsonTasklet 실행");
